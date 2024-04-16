@@ -1,0 +1,44 @@
+#!/bin/bash
+
+MIFMOG_LOCATION=~/Development/mifmog
+
+ShowHelpPage() {
+    echo "USAGE"
+    echo "  mifmog new <SHEETNAME>"
+    echo "  mifmog edit <SHEETNAME>"
+    echo "  mifmog eval <SHEETNAME>"
+    echo "  mifmog list"
+    echo "  mifmog --help"
+}
+
+if [[ $# -eq 2 && "$1" == "new" ]]; then
+    SHEET_FILEPATH="$2"
+    if [ -f "$SHEET_FILEPATH" ]; then
+        echo Tasksheet already exists && exit 1
+    fi
+    echo "name: \"$2\"" > $SHEET_FILEPATH
+    echo "desc: \"\"" >> $SHEET_FILEPATH
+    cat $MIFMOG_LOCATION/res/task.yaml >> $SHEET_FILEPATH
+    echo Created sheet $2
+
+elif [[ $# -eq 2 && "$1" == "edit" ]]; then
+    vim $2
+    python3 $MIFMOG_LOCATION/main.py evaluate $2
+
+elif [[ $# -eq 2 && "$1" == "eval" ]]; then
+    python3 $MIFMOG_LOCATION/main.py evaluate $2
+
+elif [ "$1" == "list" ]; then
+    ls $MIFMOG_LOCATION/sheets/
+
+elif [ "$1" == "--help" ]; then
+    echo "mifmog - Track your tasks in a simple manner"
+    echo ""
+    ShowHelpPage
+
+else
+    echo Invalid arguments
+    echo ""
+    ShowHelpPage
+
+fi
