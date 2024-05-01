@@ -9,12 +9,30 @@ COLOUR_MAGENTA = "\033[0;35m"
 COLOUR_CYAN = "\033[0;36m"
 
 def time(string):
-    string = string.split(":")
-    seconds = float(string[-1])
-    if len(string) >= 2:
-        seconds += float(string[-2]) * 60
+    arr = string.split(":")
+    seconds = 0
+    mult = 1
+    for index in range(1, len(arr) + 1, 1):
+        seconds += float(arr[-index]) * mult
+        mult *= 60
     return seconds
 
+def prog(value, minimum, maximum):
+    if value < minimum:
+        return 0
+    elif value > maximum:
+        return 1
+    else:
+        return (value - minimum) / (maximum - minimum)
+
+def timeprog(value, min_time, max_time):
+    value = time(value)
+    min_time = time(min_time)
+    max_time = time(max_time)
+    return prog(value, min_time, max_time)
+
+def negtimeprog(value, min_time, max_time):
+    return 1 - timeprog(value, max_time, min_time)
 
 def read_tasksheet(tasksheet_name):
     filepath = tasksheet_name

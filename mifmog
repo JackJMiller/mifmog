@@ -7,19 +7,19 @@ ShowHelpPage() {
     echo "  mifmog new <SHEETNAME>"
     echo "  mifmog edit <SHEETNAME>"
     echo "  mifmog eval <SHEETNAME>"
-    echo "  mifmog list"
     echo "  mifmog --help"
 }
 
 if [[ $# -eq 2 && "$1" == "new" ]]; then
-    SHEET_FILEPATH="$2"
+    SHEET_NAME="$2"
+    SHEET_FILEPATH="${SHEET_NAME}.yaml"
     if [ -f "$SHEET_FILEPATH" ]; then
-        echo Tasksheet already exists && exit 1
+        echo Sheet already exists && exit 1
     fi
-    echo "name: \"$2\"" > $SHEET_FILEPATH
+    echo "name: \"$SHEET_NAME\"" > $SHEET_FILEPATH
     echo "desc: \"\"" >> $SHEET_FILEPATH
     cat $MIFMOG_LOCATION/res/task.yaml >> $SHEET_FILEPATH
-    echo Created sheet $2
+    echo Created sheet $SHEET_FILEPATH
 
 elif [[ $# -eq 2 && "$1" == "edit" ]]; then
     vim $2
@@ -28,11 +28,8 @@ elif [[ $# -eq 2 && "$1" == "edit" ]]; then
 elif [[ $# -eq 2 && "$1" == "eval" ]]; then
     python3 $MIFMOG_LOCATION/main.py evaluate $2
 
-elif [ "$1" == "list" ]; then
-    ls $MIFMOG_LOCATION/sheets/
-
 elif [ "$1" == "--help" ]; then
-    echo "mifmog - Track your tasks in a simple manner"
+    echo "mifmog - mifmog is for managing one's goals"
     echo ""
     ShowHelpPage
 
